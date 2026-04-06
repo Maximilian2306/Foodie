@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Foodie – deine private Rezeptsammlung" />
+  <meta name="theme-color" content="#0D0D0B" id="meta-theme-color" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Foodie" />
+  <link rel="apple-touch-icon" href="icons/icon-192.svg" />
+
+  <!-- Fonts (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+  <title>Foodie</title>
+</head>
+<body>
+
+  <!-- ========================================
+       GRAIN OVERLAY (CSS-Noise-Textur)
+       ======================================== -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- ========================================
+       APP HEADER
+       ======================================== -->
+  <header class="app-header" id="app-header">
+    <div class="header-inner">
+
+      <!-- Links: Logo oder Zurück-Button -->
+      <div class="header-left">
+        <button class="btn-icon btn-back hidden" id="btn-back" aria-label="Zurück zur Übersicht">
+          <!-- Arrow Left -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+          </svg>
+        </button>
+
+        <!-- Logo (nur auf Startseite sichtbar) -->
+        <div class="app-logo" id="app-logo">
+          <span class="logo-fork" aria-hidden="true">
+            <!-- Fork-Icon aus SVG-Pfaden -->
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+              <path d="M9 4C9 4 9 13 13 15.5C17 18 17 13 17 9"
+                    stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13 15.5V28" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round"/>
+              <path d="M21 4V11C21 13.7614 23.2386 16 26 16V28"
+                    stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="logo-wordmark">Foodie</span>
+        </div>
+
+        <!-- Rezept-Titel (nur in Detailansicht sichtbar) -->
+        <div class="detail-heading hidden" id="detail-heading"></div>
+      </div>
+
+      <!-- Rechts: Aktions-Buttons -->
+      <div class="header-right">
+
+        <!-- Theme-Toggle -->
+        <button class="btn-icon btn-theme" id="btn-theme" aria-label="Design umschalten">
+          <!-- Sonne (Light Mode anzeigen wenn Dark aktiv) -->
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+          <!-- Mond (Dark Mode anzeigen wenn Light aktiv) -->
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+
+        <!-- Einstellungen / Backup -->
+        <button class="btn-icon btn-settings" id="btn-settings" aria-label="Einstellungen">
+          <!-- Sliders-Icon (einfaches, sicheres SVG) -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4"  y1="6"  x2="20" y2="6"/>
+            <line x1="4"  y1="12" x2="20" y2="12"/>
+            <line x1="4"  y1="18" x2="20" y2="18"/>
+            <circle cx="9"  cy="6"  r="2" fill="var(--bg)"/>
+            <circle cx="15" cy="12" r="2" fill="var(--bg)"/>
+            <circle cx="9"  cy="18" r="2" fill="var(--bg)"/>
+          </svg>
+        </button>
+
+        <!-- Löschen-Button (nur in Detailansicht) -->
+        <button class="btn-icon btn-delete hidden" id="btn-delete" aria-label="Rezept löschen">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+            <path d="M9 6V4h6v2"/>
+          </svg>
+        </button>
+
+        <!-- Rezept hinzufügen -->
+        <button class="btn-add" id="btn-add" aria-label="Neues Rezept hinzufügen">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span>Neu</span>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================
+       MAIN CONTENT
+       ======================================== -->
+  <main class="main-content">
+
+    <!-- ---- STARTSEITE / ÜBERSICHT ---- -->
+    <section class="view" id="view-home">
+
+      <!-- Leer-Zustand -->
+      <div class="empty-state hidden" id="empty-state">
+        <div class="empty-icon" aria-hidden="true">
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+            <circle cx="36" cy="36" r="34" stroke="currentColor"
+                    stroke-width="1.5" stroke-dasharray="5 5" opacity="0.4"/>
+            <path d="M22 26C22 26 22 40 28 43C34 46 34 40 34 34"
+                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M29 43V52" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M38 22V31C38 34.866 41.134 38 45 38V52"
+                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="50" cy="22" r="3" fill="currentColor" opacity="0.3"/>
+          </svg>
+        </div>
+        <h2 class="empty-title">Noch keine Rezepte</h2>
+        <p class="empty-text">
+          Tippe auf <strong>Neu</strong> und füge<br/>dein erstes Gericht hinzu.
+        </p>
+      </div>
+
+      <!-- Rezept-Gitter -->
+      <div class="recipe-grid" id="recipe-grid"></div>
+
+    </section>
+
+    <!-- ---- DETAILANSICHT ---- -->
+    <section class="view hidden" id="view-detail">
+
+      <!-- Hero-Bild -->
+      <div class="detail-hero">
+        <img class="detail-img" id="detail-img" src="" alt="" />
+        <div class="detail-hero-gradient" aria-hidden="true"></div>
+        <div class="detail-hero-label">
+          <span id="detail-hero-name"></span>
+        </div>
+      </div>
+
+      <!-- Inhalt -->
+      <div class="detail-body">
+
+        <!-- Zutaten -->
+        <section class="detail-section">
+          <div class="section-header">
+            <span class="section-number" aria-hidden="true">01</span>
+            <h2 class="section-title">Zutaten</h2>
+          </div>
+          <ul class="ingredients-list" id="detail-ingredients"></ul>
+        </section>
+
+        <!-- Zubereitung -->
+        <section class="detail-section">
+          <div class="section-header">
+            <span class="section-number" aria-hidden="true">02</span>
+            <h2 class="section-title">Zubereitung</h2>
+          </div>
+          <ol class="steps-list" id="detail-steps"></ol>
+        </section>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================
+       MODAL: NEUES REZEPT HINZUFÜGEN
+       ======================================== -->
+  <div class="modal-backdrop hidden" id="modal-add" role="dialog"
+       aria-modal="true" aria-label="Neues Rezept hinzufügen">
+    <div class="modal-sheet" id="modal-sheet">
+
+      <!-- Drag-Handle -->
+      <div class="modal-handle" aria-hidden="true"></div>
+
+      <!-- Modal-Kopf -->
+      <div class="modal-header">
+        <h2 class="modal-title">Neues Rezept</h2>
+        <button class="btn-icon" id="btn-close-modal" aria-label="Schließen">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal-Body mit Formular -->
+      <div class="modal-body">
+        <form id="form-add" novalidate autocomplete="off">
+
+          <!-- Name -->
+          <div class="form-group">
+            <label class="form-label" for="input-name">
+              Name des Gerichts <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <input class="form-input" type="text" id="input-name"
+                   placeholder="z.B. Pasta Carbonara" required
+                   maxlength="100" />
+          </div>
+
+          <!-- Bild -->
+          <div class="form-group">
+            <label class="form-label">Bild</label>
+
+            <!-- Toggle Upload / URL -->
+            <div class="image-toggle-bar">
+              <button type="button" class="toggle-pill active"
+                      id="toggle-upload" data-mode="upload">
+                Hochladen
+              </button>
+              <button type="button" class="toggle-pill"
+                      id="toggle-url" data-mode="url">
+                URL eingeben
+              </button>
+            </div>
+
+            <!-- Upload-Bereich -->
+            <div id="section-upload">
+              <label class="drop-zone" id="drop-zone" for="input-image-file">
+                <input type="file" id="input-image-file" accept="image/*" hidden />
+                <div class="drop-zone-content" id="drop-zone-content">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                       opacity="0.6">
+                    <rect x="3" y="3" width="18" height="18" rx="3"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <path d="M21 15l-5-5L5 21"/>
+                  </svg>
+                  <span class="drop-label">Bild auswählen oder ablegen</span>
+                  <span class="drop-hint">JPG, PNG, WEBP – max. 5 MB</span>
+                </div>
+                <img class="drop-preview hidden" id="drop-preview" alt="Vorschau" />
+              </label>
+            </div>
+
+            <!-- URL-Eingabe -->
+            <div id="section-url" class="hidden">
+              <input class="form-input" type="url" id="input-image-url"
+                     placeholder="https://beispiel.de/bild.jpg" />
+            </div>
+          </div>
+
+          <!-- Zutaten (dynamisch) -->
+          <div class="form-group">
+            <label class="form-label">
+              Zutaten <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <div class="dynamic-list" id="ingredients-list">
+              <!-- Initiales Item -->
+              <div class="list-item">
+                <input class="form-input list-input"
+                       type="text" placeholder="z.B. 200 g Spaghetti" />
+                <button type="button" class="btn-remove" aria-label="Zutat entfernen">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="btn-list-add" id="btn-add-ingredient">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              Zutat hinzufügen
+            </button>
+          </div>
+
+          <!-- Zubereitung / Schritte (dynamisch) -->
+          <div class="form-group">
+            <label class="form-label">
+              Zubereitung <span class="required-mark" aria-hidden="true">*</span>
+            </label>
+            <div class="dynamic-list" id="steps-list">
+              <!-- Initialer Schritt -->
+              <div class="list-item list-item--step">
+                <span class="step-number" aria-hidden="true">1</span>
+                <textarea class="form-input form-textarea list-input"
+                          placeholder="Schritt 1 beschreiben …"
+                          rows="2"></textarea>
+                <button type="button" class="btn-remove" aria-label="Schritt entfernen">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="btn-list-add" id="btn-add-step">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="3" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              Schritt hinzufügen
+            </button>
+          </div>
+
+          <!-- Speichern -->
+          <button type="submit" class="btn-submit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M5 13l4 4L19 7"/>
+            </svg>
+            Rezept speichern
+          </button>
+
+        </form>
+      </div><!-- /modal-body -->
+    </div><!-- /modal-sheet -->
+  </div><!-- /modal-backdrop #modal-add -->
+
+  <!-- ========================================
+       DIALOG: LÖSCHEN BESTÄTIGEN
+       ======================================== -->
+  <div class="modal-backdrop hidden" id="modal-confirm"
+       role="alertdialog" aria-modal="true"
+       aria-label="Rezept löschen bestätigen">
+    <div class="confirm-dialog">
+      <div class="confirm-icon" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <path d="M12 9v4M12 17h.01"/>
+        </svg>
+      </div>
+      <h3 class="confirm-title">Rezept löschen?</h3>
+      <p class="confirm-text">Dieses Rezept wird unwiderruflich gelöscht.</p>
+      <div class="confirm-actions">
+        <button class="btn-secondary" id="btn-cancel-delete">Abbrechen</button>
+        <button class="btn-danger" id="btn-confirm-delete">Löschen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       MODAL: EINSTELLUNGEN & BACKUP
+       ======================================== -->
+  <div class="modal-backdrop hidden" id="modal-settings"
+       role="dialog" aria-modal="true" aria-label="Einstellungen">
+    <div class="modal-sheet">
+
+      <div class="modal-handle" aria-hidden="true"></div>
+
+      <div class="modal-header">
+        <h2 class="modal-title">Einstellungen</h2>
+        <button class="btn-icon" id="btn-close-settings" aria-label="Schließen">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Rezept-Statistik -->
+        <div class="settings-stat-row">
+          <div class="settings-stat">
+            <span class="settings-stat-value" id="stat-recipe-count">0</span>
+            <span class="settings-stat-label">Rezepte gespeichert</span>
+          </div>
+          <div class="settings-stat-divider" aria-hidden="true"></div>
+          <div class="settings-stat">
+            <span class="settings-stat-value" id="stat-storage-size">–</span>
+            <span class="settings-stat-label">Speicher belegt</span>
+          </div>
+        </div>
+
+        <!-- Backup-Bereich -->
+        <div class="settings-section">
+          <p class="settings-section-label">Daten & Backup</p>
+
+          <!-- Export -->
+          <button class="backup-action" id="btn-export">
+            <div class="backup-action-icon" style="background:rgba(74,195,120,0.12);color:#4ac378;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </div>
+            <div class="backup-action-text">
+              <span class="backup-action-title">Backup erstellen</span>
+              <span class="backup-action-desc">Alle Rezepte als foodie-backup.json herunterladen</span>
+            </div>
+            <svg class="backup-action-arrow" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+
+          <!-- Import -->
+          <button class="backup-action" id="btn-import-trigger">
+            <div class="backup-action-icon" style="background:rgba(232,168,37,0.12);color:#E8A825;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <div class="backup-action-text">
+              <span class="backup-action-title">Backup laden</span>
+              <span class="backup-action-desc">JSON-Datei auswählen und Rezepte wiederherstellen</span>
+            </div>
+            <svg class="backup-action-arrow" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+
+          <!-- Verstecktes File-Input für JSON-Import -->
+          <input type="file" id="input-backup-file"
+                 accept=".json,application/json" hidden />
+        </div>
+
+        <!-- Info-Text -->
+        <div class="settings-info-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               opacity="0.7" style="flex-shrink:0;margin-top:1px;">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+          <p>Deine Rezepte sind nur in diesem Browser gespeichert. Erstelle regelmäßig ein Backup, damit bei einem Cache-Reset keine Daten verloren gehen.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       DIALOG: IMPORT BESTÄTIGEN
+       ======================================== -->
+  <div class="modal-backdrop hidden" id="modal-import-confirm"
+       role="alertdialog" aria-modal="true"
+       aria-label="Backup importieren bestätigen">
+    <div class="confirm-dialog">
+      <div class="confirm-icon" style="background:rgba(232,168,37,0.12);color:#E8A825;" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <h3 class="confirm-title">Backup importieren?</h3>
+      <p class="confirm-text" id="import-confirm-text">
+        Deine bestehenden Rezepte werden überschrieben.
+      </p>
+      <div class="confirm-actions">
+        <button class="btn-secondary" id="btn-cancel-import">Abbrechen</button>
+        <button class="btn-submit" id="btn-confirm-import" style="flex:1;">Importieren</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       TOAST-BENACHRICHTIGUNGEN
+       ======================================== -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- App-Script -->
+  <script src="app.js"></script>
+
+</body>
+</html>

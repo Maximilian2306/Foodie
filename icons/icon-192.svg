@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <!-- Hintergrund: abgerundetes Quadrat, dunkel -->
+  <rect width="192" height="192" rx="44" fill="#0D0D0B"/>
+
+  <!-- Subtile Textur / Verlauf -->
+  <rect width="192" height="192" rx="44" fill="url(#bg-grad)" opacity="0.5"/>
+
+  <!-- Saffron-Akzent-Kreis (dekorativ, unten rechts) -->
+  <circle cx="148" cy="148" r="72" fill="#E8A825" opacity="0.12"/>
+
+  <!-- Gabel (links) -->
+  <!-- Linke Zinke -->
+  <path d="M72 42 L72 72" stroke="#E8A825" stroke-width="7" stroke-linecap="round"/>
+  <!-- Mittlere Zinke -->
+  <path d="M84 42 L84 72" stroke="#E8A825" stroke-width="7" stroke-linecap="round"/>
+  <!-- Rechte Zinke -->
+  <path d="M96 42 L96 72" stroke="#E8A825" stroke-width="7" stroke-linecap="round"/>
+  <!-- Gabel-Bogen -->
+  <path d="M72 72 Q72 90 84 92 Q96 90 96 72" stroke="#E8A825" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- Gabel-Stiel -->
+  <path d="M84 92 L84 150" stroke="#E8A825" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- Messer (rechts) -->
+  <!-- Klinge (oben, abgerundet) -->
+  <path d="M116 42 Q132 52 132 80 L116 80 Z" fill="#F5F0E8" opacity="0.9"/>
+  <!-- Stiel -->
+  <path d="M116 80 L116 150" stroke="#F5F0E8" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+
+  <defs>
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#2A2A24"/>
+      <stop offset="100%" stop-color="#0D0D0B"/>
+    </linearGradient>
+  </defs>
+</svg>
